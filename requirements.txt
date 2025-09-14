@@ -1,9 +1,10 @@
+
 Flask==3.1.2
 flask-cors==3.0.10
 docx2pdf==0.1.8
 Pillow==11.3.0
-img2pdf==0.6.1  # Latest available version
-pandas==2.1.1
+img2pdf==0.6.1
+pandas==2.2.2  # ← Changed from 2.1.1 to 2.2.2
 fpdf==1.7.2
 comtypes==1.2.0
 python-docx==0.8.12
