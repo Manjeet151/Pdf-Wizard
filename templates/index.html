@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Converter | Professional Document Conversion</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="logo">PDF<span>Converter</span></h1>
+            <p class="tagline">Transform your documents into professional PDFs</p>
+        </header>
+
+        <main class="main-content">
+            <div class="upload-card">
+                <div class="card-header">
+                    <h2>Convert to PDF</h2>
+                    <p>Select file type and upload your document</p>
+                </div>
+
+                <form id="uploadForm" enctype="multipart/form-data">
+                    <div class="file-type-selector">
+                        <div class="radio-group">
+                            <input type="radio" id="word" name="fileType" value="word" checked>
+                            <label for="word">Word</label>
+                            
+                            <input type="radio" id="image" name="fileType" value="image">
+                            <label for="image">Image</label>
+                            
+                            <input type="radio" id="excel" name="fileType" value="excel">
+                            <label for="excel">Excel</label>
+                            
+                            <input type="radio" id="text" name="fileType" value="text">
+                            <label for="text">Text</label>
+                        </div>
+                    </div>
+
+                    <div class="file-upload-area" id="dropZone">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                        <p class="upload-instruction">Drag & drop your file here or click to browse</p>
+                        <p class="upload-subtext">Maximum file size: 16MB</p>
+                        <input type="file" id="fileInput" name="file" class="file-input">
+                    </div>
+
+                    <div class="selected-file" id="selectedFileContainer">
+                        <div class="file-info">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                                <polyline points="13 2 13 9 20 9"></polyline>
+                            </svg>
+                            <span id="selectedFileName">No file selected</span>
+                        </div>
+                        <button type="button" id="removeFileBtn" class="remove-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <button type="submit" id="convertBtn" class="convert-button" disabled>
+                        <span>Convert to PDF</span>
+                        <div class="spinner hidden" id="spinner"></div>
+                    </button>
+                </form>
+            </div>
+
+            <div class="features-section">
+                <h3>Supported Formats</h3>
+                <div class="features-grid">
+                    <div class="feature">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                                <polyline points="10 9 9 9 8 9"></polyline>
+                            </svg>
+                        </div>
+                        <h4>Word Documents</h4>
+                        <p>.doc, .docx</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                <polyline points="21 15 16 10 5 21"></polyline>
+                            </svg>
+                        </div>
+                        <h4>Images</h4>
+                        <p>.png, .jpg, .jpeg, .webp, .bmp, .tiff</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <path d="M16 13H8"></path>
+                                <path d="M16 17H8"></path>
+                                <path d="M10 9H8"></path>
+                            </svg>
+                        </div>
+                        <h4>Excel Files</h4>
+                        <p>.xls, .xlsx, .csv</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                                <polyline points="10 9 9 9 8 9"></polyline>
+                            </svg>
+                        </div>
+                        <h4>Text Files</h4>
+                        <p>.txt</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>© 2025 PDF Converter. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <div class="notification hidden" id="notification">
+        <span id="notificationMessage"></span>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
