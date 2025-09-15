@@ -5,7 +5,7 @@ import os
 from docx2pdf import convert
 from PIL import Image
 import img2pdf
-import pandas as pd
+
 from fpdf import FPDF
 import pythoncom
 import comtypes.client
