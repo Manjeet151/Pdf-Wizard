@@ -9,6 +9,8 @@ from docx import Document
 import tempfile
 import sys
 import os
+import pandas as pd
+import time  # Added missing import
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
@@ -17,9 +19,20 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__)
 CORS(app)
 
-# Remove Windows-specific imports
-# import pythoncom
-# import comtypes.client
+# Define allowed extensions
+ALLOWED_EXTENSIONS = {
+    'word': ['.doc', '.docx'],
+    'image': ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff'],
+    'excel': ['.xls', '.xlsx', '.csv'],
+    'text': ['.txt']
+}
+
+def allowed_file(filename, file_type):
+    """Check if the file extension is allowed for the given type"""
+    if '.' not in filename:
+        return False
+    ext = filename.lower().rsplit('.', 1)[1]
+    return f'.{ext}' in ALLOWED_EXTENSIONS.get(file_type, [])
 
 def convert_doc_to_pdf(input_path, output_path):
     try:
@@ -42,19 +55,52 @@ def convert_doc_to_pdf_fallback(input_path, output_path):
     This is a simplified version - you might need to expand this based on your needs
     """
     try:
-        # This is a placeholder - you might want to use a different library
-        # or service for DOC to PDF conversion on Linux
-        logger.warning(f"Using fallback method for {input_path}")
-        
-        # For now, we'll just copy the file and change extension
-        # This is not a real conversion - you'll need to implement proper conversion
-        with open(input_path, 'rb') as src, open(output_path, 'wb') as dst:
-            dst.write(src.read())
+        # For DOC files, we can try to read with python-docx (might not work for .doc)
+        # or use a different approach
+        if input_path.lower().endswith('.docx'):
+            # Try to use python-docx to read and then create PDF
+            document = Document(input_path)
+            pdf = FPDF()
+            pdf.add_page()
+            pdf.set_font("Arial", size=12)
             
-        return True
+            for paragraph in document.paragraphs:
+                if paragraph.text.strip():
+                    pdf.multi_cell(0, 10, paragraph.text)
+                    pdf.ln(2)
+            
+            pdf.output(output_path)
+            return True
+        else:
+            # For .doc files, we might need to use a service or different library
+            raise Exception("DOC file conversion not supported on this platform. Please convert to DOCX first.")
+            
     except Exception as e:
         logger.error(f"Fallback conversion also failed: {str(e)}")
-        raise Exception("Document conversion failed on this platform")
+        raise Exception(f"Document conversion failed: {str(e)}")
+
+def convert_word_to_pdf_fallback(input_path, output_path):
+    """Alternative fallback for Word conversion"""
+    try:
+        # Simple text extraction approach
+        if input_path.lower().endswith('.docx'):
+            document = Document(input_path)
+            pdf = FPDF()
+            pdf.add_page()
+            pdf.set_font("Arial", size=12)
+            
+            for paragraph in document.paragraphs:
+                if paragraph.text.strip():
+                    pdf.multi_cell(0, 10, paragraph.text[:200])  # Limit text length
+                    pdf.ln(2)
+            
+            pdf.output(output_path)
+            return True
+        else:
+            raise Exception("Only DOCX files supported in fallback mode")
+    except Exception as e:
+        logger.error(f"Word fallback conversion failed: {str(e)}")
+        raise Exception(f"Word conversion failed: {str(e)}")
 
 @app.errorhandler(413)
 def too_large(e):
@@ -86,7 +132,7 @@ def convert_file():
             if file_type == 'word':
                 if file.filename.lower().endswith('.docx'):
                     try:
-                        convert(input_file.name, output_file.name)
+                        docx2pdf_convert(input_file.name, output_file.name)  # Fixed function name
                     except Exception as e:
                         logger.warning(f"docx2pdf failed, using fallback: {str(e)}")
                         convert_word_to_pdf_fallback(input_file.name, output_file.name)
