@@ -1,6 +1,4 @@
-import sys
-import os
-from flask import Flask, request, send_file, jsonify
+from flask import Flask, request, send_file, jsonify, render_template
 from flask_cors import CORS
 import logging
 from docx2pdf import convert as docx2pdf_convert
@@ -9,6 +7,8 @@ import img2pdf
 from fpdf import FPDF
 from docx import Document
 import tempfile
+import sys
+import os
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
