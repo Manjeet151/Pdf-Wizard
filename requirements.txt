@@ -3,7 +3,7 @@ flask-cors==3.0.10
 docx2pdf==0.1.8
 Pillow==11.3.0
 img2pdf==0.6.1
-pandas==2.2.2 --only-binary=pandas  # ← Add this flag
+pandas==2.2.2
 fpdf==1.7.2
 comtypes==1.2.0
 python-docx==0.8.12
