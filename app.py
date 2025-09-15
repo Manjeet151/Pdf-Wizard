@@ -7,8 +7,7 @@ from PIL import Image
 import img2pdf
 
 from fpdf import FPDF
-import pythoncom
-import comtypes.client
+
 import time
 from docx import Document
 import logging
